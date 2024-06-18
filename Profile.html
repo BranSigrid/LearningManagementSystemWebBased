@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">User Profile</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Back Button -->
+                <a href="javascript:history.back()" class="btn btn-secondary mb-3">Back</a>
+                <form>
+                    <!-- Profile Picture -->
+                    <div class="form-group text-center">
+                        <img src="default-profile.png" alt="Profile Picture" class="img-thumbnail mb-3" id="profilePicPreview" style="width: 150px; height: 150px;">
+                        <div>
+                            <input type="file" class="form-control-file" id="profilePicUpload" onchange="previewProfilePic()">
+                        </div>
+                    </div>
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" value="John Doe">
+                    </div>
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" value="john.doe@example.com">
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Change Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter new password">
+                    </div>
+                    <!-- Bio -->
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea class="form-control" id="bio" rows="3" placeholder="Write a short bio...">Hello, I'm John Doe. I love coding and exploring new technologies.</textarea>
+                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS to preview profile picture -->
+    <script>
+        function previewProfilePic() {
+            const file = document.getElementById('profilePicUpload').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function() {
+                document.getElementById('profilePicPreview').src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('profilePicPreview').src = 'default-profile.png';
+            }
+        }
+    </script>
+</body>
+</html>

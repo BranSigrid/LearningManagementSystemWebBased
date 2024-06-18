@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMSkills</title>
+    <!--Logo Website-->
+    <link rel="" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            background-color: #555;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            text-align: center;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            display: block;
+            margin-top: 5px;
+            right: 0;
+            background: #fff;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+            left: 0;
+            background: #04AA6D; /* Line color when hovering */
+        }
+
+        .navbar a:hover {
+            color: #fff; /* Text color when hovering */
+        }
+
+        .submenu {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 160px;
+            z-index: 1;
+        }
+
+        .navbar li {
+            position: relative;
+            display: inline-block;
+        }
+
+        .navbar li:hover .submenu {
+            display: block;
+        }
+
+        .submenu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        .submenu a:hover {
+            background-color: #444;
+        }
+
+        .content {
+            margin-top: 60px; /* Adjust this value to prevent overlap with the navbar */
+            padding: 20px;
+        }
+
+        .carousel-item {
+            height: 400px; /* Set the height of the carousel items */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .card {
+            margin: 15px;
+        }
+
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .announcements, .courses, .dashboard {
+            padding: 20px 0;
+        }
+
+        .announcements h2, .courses h2, .dashboard h2 {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #555;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        
+        .footer .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .footer-box{
+            font-size: 1.2rem;
+        }
+
+        .footer-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: #333;
+            margin: 1px;
+        }
+        .footer a {
+            color: #04AA6D;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <li>
+            <a href="#" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+            <a href="#" class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Classroom</a>
+            <div class="submenu">
+                <a href="Classroom.html">Enrolled class</a>
+                <a href="Finalyearproject.html">Final Year Project</a>
+                <a href="internship.html">Internship</a>
+            </div>
+        </li>
+        <li>
+            <a href="#" class="nav-link"><i class="fas fa-circle-info"></i> About</a>
+            <div class="submenu">
+                <a href="https://sarawakskills.edu.my">Sarawak Skills Development Centre</a>
+            </div>
+        </li>
+        <li>
+            <a href="Schedule.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Schedule</a>
+        </li>
+        <li>
+            <a href="Profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+            <div class="submenu">
+                <a href="Profile.html" class="nav-link">View Profile</a>
+            </div>
+        </li>
+    </div>
+    <div class="content">
+        <!-- Bootstrap Carousel -->
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="5000">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active" style="background-image: url('https://via.placeholder.com/800x400?text=Slide+1');">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Welcome to LMSkills</h5>
+                        <p>Your journey to knowledge starts here.</p>
+                    </div>
+                </div>
+                <div class="carousel-item" style="background-image: url('https://via.placeholder.com/800x400?text=Slide+2');">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Interactive Courses</h5>
+                        <p>Learn with our extensive library of courses.</p>
+                    </div>
+                </div>
+                <div class="carousel-item" style="background-image: url('https://via.placeholder.com/800x400?text=Slide+3');">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Join Our Community</h5>
+                        <p>Connect with learners around the world.</p>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <!-- Announcements Section -->
+        <div class="announcements">
+            <h2>Announcements</h2>
+            <div class="card-deck">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">New Course: Web Development</h5>
+                        <p class="card-text">We have launched a new course on Web Development. Enroll now to enhance your skills.</p>
+                        <p class="card-text"><small class="text-muted">Posted 2 days ago</small></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Scheduled Maintenance</h5>
+                        <p class="card-text">Our site will be down for maintenance on 25th May from 2 AM to 4 AM.</p>
+                        <p class="card-text"><small class="text-muted">Posted 1 week ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Section -->
+        <div class="courses">
+            <h2>Popular Courses</h2>
+            <div class="card-deck">
+                <div class="card">
+                    <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Course 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Introduction to Programming</h5>
+                        <p class="card-text">Learn the basics of programming with this beginner-friendly course.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Course 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Data Science Basics</h5>
+                        <p class="card-text">Get started with data science and learn how to analyze data effectively.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Course 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Web Development Bootcamp</h5>
+                        <p class="card-text">Become a full-stack web developer with this intensive bootcamp.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="dashboard">
+            <h2>Student Dashboard</h2>
+            <div class="card-deck">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Courses</h5>
+                        <p class="card-text">View and manage your enrolled courses.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Progress</h5>
+                        <p class="card-text">Track your learning progress and achievements.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Messages</h5>
+                        <p class="card-text">Check messages from instructors and classmates.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Classroom</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Where</a></li>
+                        <li><a href="#">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>External Links</h5>
+                    <ul>
+                        <li><a href="#">Google</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Wikipedia</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#carouselExampleIndicators').carousel({
+                interval: 5000,
+                ride: 'carousel'
+            });
+        });
+    </script>
+</body>
+</html>

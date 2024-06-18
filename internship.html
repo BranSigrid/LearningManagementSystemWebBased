@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Task Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task-item {
+            background: #e9e9e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .task-item img {
+            max-width: 100%;
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .task-actions {
+            margin-top: 10px;
+        }
+
+        .task-actions button {
+            background-color: #007bff;
+            margin-right: 5px;
+        }
+
+        .task-actions button:last-child {
+            background-color: #dc3545;
+        }
+
+        .task-actions button:hover {
+            opacity: 0.8;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #e65c54;
+        }
+
+        .print-download-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .print-download-buttons button {
+            background-color: #6c757d;
+            margin: 0 10px;
+        }
+
+        .print-download-buttons button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Internship Task Management</h1>
+        <button class="back-button" onclick="window.history.back();">Back</button>
+        
+        <div class="print-download-buttons">
+            <button onclick="printTasks()">Print</button>
+            <button onclick="downloadPDF()">Download as PDF</button>
+        </div>
+        
+        <form id="taskForm">
+            <label for="title">Title:</label>
+            <input type="text" id="title" required>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+
+            <label for="description">Description or Task:</label>
+            <textarea id="description" rows="4" required></textarea>
+
+            <label for="status">Status:</label>
+            <select id="status" required>
+                <option value="haven't started">Haven't Started</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="done">Done</option>
+            </select>
+
+            <label for="image">Images:</label>
+            <input type="file" id="image" accept="image/*" multiple>
+
+            <label for="imageDescription">Image Description:</label>
+            <textarea id="imageDescription" rows="2" placeholder="Enter image description"></textarea>
+
+            <label for="fileName">Save As (File Name):</label>
+            <input type="text" id="fileName" required placeholder="Enter file name">
+
+            <button type="submit" id="submitButton">Add Task</button>
+        </form>
+
+        <ul id="taskList" class="task-list"></ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let editMode = false;
+        let editIndex = null;
+        let tasks = [];
+
+        document.getElementById('taskForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value;
+            const status = document.getElementById('status').value;
+            const imageDescription = document.getElementById('imageDescription').value;
+            const fileName = document.getElementById('fileName').value || 'tasks';
+            const imageInput = document.getElementById('image');
+            const taskList = document.getElementById('taskList');
+
+            let imageFiles = imageInput.files;
+            let imageElements = [];
+
+            if (imageFiles.length > 0) {
+                for (let i = 0; i < imageFiles.length; i++) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        let img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = 'Task Image';
+                        img.onclick = function () {
+                            this.remove();
+                        };
+                        imageElements.push(img);
+                        if (imageElements.length === imageFiles.length) {
+                            processTask();
+                        }
+                    };
+                    reader.readAsDataURL(imageFiles[i]);
+                }
+            } else {
+                processTask();
+            }
+
+            function processTask() {
+                let imagesHTML = '';
+                imageElements.forEach(img => {
+                    imagesHTML += img.outerHTML;
+                });
+
+                const task = {
+                    title,
+                    date,
+                    description,
+                    status,
+                    images: imagesHTML,
+                    imageDescription
+                };
+
+                if (editMode) {
+                    // Update the existing task
+                    tasks[editIndex] = task;
+                    const taskItem = taskList.children[editIndex];
+                    taskItem.innerHTML = `
+                        <h3>${title}</h3>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Description:</strong> ${description}</p>
+                        <p><strong>Status:</strong> ${status}</p>
+                        ${imagesHTML}
+                        <p><strong>Image Description:</strong> ${imageDescription}</p>
+                        <div class="task-actions">
+                            <button onclick="editTask(this)">Edit</button>
+                            <button onclick="deleteTask(this)">Delete</button>
+                        </div>
+                    `;
+                    editMode = false;
+                    editIndex = null;
+                    document.getElementById('submitButton').textContent = 'Add Task';
+                } else {
+                    // Add a new task
+                    tasks.push(task);
+                    const taskItem = document.createElement('li');
+                    taskItem.className = 'task-item';
+                    taskItem.innerHTML = `
+                        <h3>${title}</h3>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Description:</strong> ${description}</p>
+                        <p><strong>Status:</strong> ${status}</p>
+                        ${imagesHTML}
+                        <p><strong>Image Description:</strong> ${imageDescription}</p>
+                        <div class="task-actions">
+                            <button onclick="editTask(this)">Edit</button>
+                            <button onclick="deleteTask(this)">Delete</button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskItem);
+                }
+
+                document.getElementById('taskForm').reset();
+            }
+        });
+
+        function editTask(button) {
+            const taskItem = button.closest('.task-item');
+            const taskIndex = Array.from(taskItem.parentNode.children).indexOf(taskItem);
+
+            const task = tasks[taskIndex];
+            document.getElementById('title').value = task.title;
+            document.getElementById('date').value = task.date;
+            document.getElementById('description').value = task.description;
+            document.getElementById('status').value = task.status;
+            document.getElementById('imageDescription').value = task.imageDescription;
+
+            editMode = true;
+            editIndex = taskIndex;
+            document.getElementById('submitButton').textContent = 'Update Task';
+        }
+
+        function deleteTask(button) {
+            const taskItem = button.closest('.task-item');
+           
+            const taskIndex = Array.from(taskItem.parentNode.children).indexOf(taskItem);
+            tasks.splice(taskIndex, 1); // Remove the task from the array
+            taskItem.remove(); // Remove the task item from the UI
+        }
+
+        function printTasks() {
+            window.print();
+        }
+
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let yOffset = 10;
+
+            tasks.forEach((task, index) => {
+                const { title, date, description, status, images, imageDescription } = task;
+
+                doc.text(`Task ${index + 1}: ${title}`, 10, yOffset);
+                yOffset += 10;
+                doc.text(`Date: ${date}`, 10, yOffset);
+                yOffset += 10;
+                doc.text(`Description: ${description}`, 10, yOffset);
+                yOffset += 10;
+                doc.text(`Status: ${status}`, 10, yOffset);
+                yOffset += 10;
+                doc.text(`Image Description: ${imageDescription}`, 10, yOffset);
+                yOffset += 10;
+
+                const imgContainer = document.createElement('div');
+                imgContainer.innerHTML = images;
+
+                const imgElements = imgContainer.querySelectorAll('img');
+                imgElements.forEach(img => {
+                    const imgProps = doc.getImageProperties(img);
+                    const imgWidth = 180; // Adjust width to fit A4 size
+                    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+                    if (yOffset + imgHeight > doc.internal.pageSize.height) {
+                        doc.addPage();
+                        yOffset = 10;
+                    }
+                    doc.addImage(img.src, 'JPEG', 10, yOffset, imgWidth, imgHeight);
+                    yOffset += imgHeight + 10;
+                });
+
+                yOffset += 10;
+            });
+
+            const fileName = document.getElementById('fileName').value || 'tasks';
+            doc.save(`${fileName}.pdf`);
+        }
+    </script>
+</body>
+</html>

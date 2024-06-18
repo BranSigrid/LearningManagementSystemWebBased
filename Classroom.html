@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Dashboard</title>
+<link href='https://unpkg.com/@fullcalendar/core@6.1.7/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@6.1.7/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/timegrid@6.1.7/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/list@6.1.7/main.min.css' rel='stylesheet' />
+<script src='https://unpkg.com/@fullcalendar/core@6.1.7/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@6.1.7/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/timegrid@6.1.7/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/interaction@6.1.7/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/list@6.1.7/main.min.js'></script>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #333;
+  width: 20%;
+  height: 100vh;
+}
+
+.tab button {
+  display: block;
+  background-color: inherit;
+  color: white;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #575757;
+}
+
+.tab button.active {
+  background-color: #575757;
+}
+
+.tabcontent {
+  display: none;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #f1f1f1;
+  margin-left: 20%;
+}
+
+.tabcontent.show {
+  display: block;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+#clock {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#date {
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+#taskList ul, #tasksTask, #events, #eventsCalendar {
+  list-style-type: none;
+  padding: 0;
+}
+
+#taskList li, #tasksTask li, #events li, #eventsCalendar li {
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+button {
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+h3 {
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+</style>
+</head>
+<body>
+
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'StudentDashboard')">Student Dashboard</button>
+  <button class="tablinks" onclick="openTab(event, 'ClassEnrolled')">Class Enrolled</button>
+  <button class="tablinks" onclick="openTab(event, 'Task')">Task</button>
+  <button class="tablinks" onclick="openTab(event, 'Calendar')">Calendar</button>
+  <button class="tablinks" onclick="goHome()">Home</button>
+</div>
+
+<div id="StudentDashboard" class="tabcontent show">
+  <h3>Student Dashboard</h3>
+  <p>This is the student dashboard.</p>
+  <div id="clock" class="card"></div>
+  <div id="date" class="card"></div>
+  <div id="scheduleTable" class="card"></div>
+  <div id="gradesProgress" class="card">
+    <h3>Grades and Progress</h3>
+    <p>Grade: A</p>
+    <p>Cumulative GPA: 3.75</p>
+    <p>Academic Standing: Good Standing</p>
+  </div>
+  <div id="taskList" class="card">
+    <h3>To-Do List</h3>
+    <input type="text" id="taskInput" placeholder="New Task...">
+    <button onclick="addTask()">Add</button>
+    <ul id="tasks"></ul>
+  </div>
+  <div id="calendarEvents" class="card">
+    <h3>Events</h3>
+    <input type="text" id="eventInput" placeholder="New Event...">
+    <button onclick="addEvent()">Add</button>
+    <ul id="events"></ul>
+  </div>
+</div>
+
+<div id="ClassEnrolled" class="tabcontent">
+  <h3>Class Enrolled</h3>
+  <p>This is the class enrolled section.</p>
+  <div id="classEnrollmentForm" class="card">
+    <h3>Enroll in a New Class</h3>
+    <form id="enrollForm">
+      <label for="courseName">Course Name:</label><br>
+      <input type="text" id="courseName" name="courseName"><br><br>
+      <label for="instructor">Instructor:</label><br>
+      <input type="text" id="instructor" name="instructor"><br><br>
+      <label for="schedule">Schedule:</label><br>
+      <input type="text" id="schedule" name="schedule"><br><br>
+      <label for="location">Location:</label><br>
+      <input type="text" id="location" name="location"><br><br>
+      <label for="securityNumber">Security Number:</label><br>
+      <input type="text" id="securityNumber" name="securityNumber"><br><br>
+      <button type="button" onclick="enrollClass()">Enroll</button>
+    </form>
+  </div>
+  <div id="enrolledClasses" class="card">
+    <h3>Enrolled Classes</h3>
+    <!-- Profile cards will be generated here -->
+  </div>
+</div>
+
+<div id="Task" class="tabcontent">
+  <h3>Task</h3>
+  <p>This is the task section.</p>
+  <div id="taskListTask" class="card">
+    <h3>To-Do List</h3>
+    <input type="text" id="taskInputTask" placeholder="New Task...">
+    <button onclick="addTaskTask()">Add</button>
+    <ul id="tasksTask"></ul>
+  </div>
+</div>
+
+<div id="Calendar" class="tabcontent">
+  <h3>Calendar</h3>
+  <p>This is the calendar section.</p>
+  <div id="calendarEventsCalendar" class="card">
+    <h3>Events</h3>
+    <input type="text" id="eventInputCalendar" placeholder="New Event...">
+    <button onclick="addEventCalendar()">Add</button>
+    <ul id="eventsCalendar"></ul>
+  </div>
+  <div id="fullCalendar" class="card">
+    <div id="calendar"></div>
+  </div>
+</div>
+
+<script>
+var courseScheduleData = [
+  { courseName: "Mathematics", instructor: "Prof. Smith", schedule: "Mon/Wed 10:00 AM - 12:00 PM", location: "Room 101", securityNumber: "12345" },
+  { courseName: "History", instructor: "Prof. Johnson", schedule: "Tue/Thu 1:00 PM - 3:00 PM", location: "Room 201", securityNumber: "67890" }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderClock();
+  renderDate();
+  renderScheduleTable();
+  renderEnrolledClasses();
+  initializeCalendar();
+});
+
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+function renderClock() {
+  var clockElement = document.getElementById("clock");
+  setInterval(function() {
+    var now = new Date();
+    clockElement.textContent = now.toLocaleTimeString();
+  }, 1000);
+}
+
+function renderDate() {
+  var dateElement = document.getElementById("date");
+  var now = new Date();
+  var options = { month: 'long', day: 'numeric' };
+  dateElement.textContent = now.toLocaleDateString(undefined, options);
+}
+
+function renderScheduleTable() {
+  var table = '<table><tr><th>Course Name</th><th>Instructor</th><th>Schedule</th><th>Location</th><th>Security Number</th></tr>';
+  for (var i = 0; i < courseScheduleData.length; i++) {
+    table += '<tr><td>' + courseScheduleData[i].courseName + '</td><td>' + courseScheduleData[i].instructor + '</td><td>' + courseScheduleData[i].schedule + '</td><td>' + courseScheduleData[i].location + '</td><td>' + courseScheduleData[i].securityNumber + '</td></tr>';
+  }
+  table += '</table>';
+  document.getElementById("scheduleTable").innerHTML = table;
+}
+
+function addTask() {
+  var taskInput = document.getElementById("taskInput");
+  var taskList = document.getElementById("tasks");
+  var taskText = taskInput.value.trim();
+  if (taskText !== "") {
+    var li = document.createElement("li");
+    li.textContent = taskText;
+    taskList.appendChild(li);
+    taskInput.value = "";
+  }
+}
+
+function addEvent() {
+  var eventInput = document.getElementById("eventInput");
+  var eventList = document.getElementById("events");
+  var eventText = eventInput.value.trim();
+  if (eventText !== "") {
+    var li = document.createElement("li");
+    li.textContent = eventText;
+    eventList.appendChild(li);
+    eventInput.value = "";
+  }
+}
+
+function enrollClass() {
+  var courseName = document.getElementById("courseName").value;
+  var instructor = document.getElementById("instructor").value;
+  var schedule = document.getElementById("schedule").value;
+  var location = document.getElementById("location").value;
+  var securityNumber = document.getElementById("securityNumber").value;
+
+  if (courseName && instructor && schedule && location && securityNumber) {
+    courseScheduleData.push({
+      courseName: courseName,
+      instructor: instructor,
+      schedule: schedule,
+      location: location,
+      securityNumber: securityNumber
+    });
+
+    renderScheduleTable();
+    renderEnrolledClasses();
+
+    document.getElementById("enrollForm").reset();
+  } else {
+    alert("Please fill in all fields.");
+  }
+}
+
+function renderEnrolledClasses() {
+  var enrolledClassesContainer = document.getElementById("enrolledClasses");
+  enrolledClassesContainer.innerHTML = "";
+
+  for (var i = 0; i < courseScheduleData.length; i++) {
+    var classCard = document.createElement("div");
+    classCard.className = "card";
+    classCard.innerHTML = '<h3>' + courseScheduleData[i].courseName + '</h3>' +
+                          '<p>Instructor: ' + courseScheduleData[i].instructor + '</p>' +
+                          '<p>Schedule: ' + courseScheduleData[i].schedule + '</p>' +
+                          '<p>Location: ' + courseScheduleData[i].location + '</p>' +
+                          '<p>Security Number: ' + courseScheduleData[i].securityNumber + '</p>' +
+                          '<a href="classDetails.html?course=' + encodeURIComponent(courseScheduleData[i].courseName) + '">View Details</a>';
+    enrolledClassesContainer.appendChild(classCard);
+  }
+}
+
+function initializeCalendar() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ],
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+    },
+    editable: true,
+    droppable: true,
+    events: []
+  });
+  calendar.render();
+}
+
+function addTaskTask() {
+  var taskInput = document.getElementById("taskInputTask");
+  var taskList = document.getElementById("tasksTask");
+  var taskText = taskInput.value.trim();
+  if (taskText !== "") {
+    var li = document.createElement("li");
+    li.textContent = taskText;
+    taskList.appendChild(li);
+    taskInput.value = "";
+  }
+}
+
+function addEventCalendar() {
+  var eventInput = document.getElementById("eventInputCalendar");
+  var eventList = document.getElementById("eventsCalendar");
+  var eventText = eventInput.value.trim();
+  if (eventText !== "") {
+    var li = document.createElement("li");
+    li.textContent = eventText;
+    eventList.appendChild(li);
+    eventInput.value = "";
+  }
+}
+
+function goHome() {
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

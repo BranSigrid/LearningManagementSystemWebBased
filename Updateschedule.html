@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Schedule</title>
+    <style>
+        /* Your existing styles */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Schedule Event</h2>
+        <form id="update-form">
+            <!-- Your form inputs as before -->
+        </form>
+
+        <!-- Container to display created events -->
+        <div id="event-container" class="event-container">
+            <h3>Ongoing Events</h3>
+            <div id="events-list">
+                <!-- Existing event display area -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateForm = document.getElementById('update-form');
+            const eventsList = document.getElementById('events-list');
+
+            // Function to display event in the UI
+            function displayEvent(event) {
+                const eventDiv = document.createElement('div');
+                eventDiv.classList.add('event');
+                eventDiv.innerHTML = `
+                    <h3>${event.name}</h3>
+                    <p><strong>Date:</strong> ${event.date}</p>
+                    <p><strong>Time:</strong> ${event.time}</p>
+                    <p><strong>Details:</strong> ${event.details}</p>
+                `;
+                eventsList.appendChild(eventDiv);
+            }
+
+            // Event listener for form submission
+            updateForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const eventName = document.getElementById('event-name').value;
+                const eventDate = document.getElementById('event-date').value;
+                const eventTime = document.getElementById('event-time').value;
+                const eventDetails = document.getElementById('event-details').value;
+
+                if (eventName && eventDate && eventTime && eventDetails) {
+                    const event = {
+                        name: eventName,
+                        date: eventDate,
+                        time: eventTime,
+                        details: eventDetails
+                    };
+
+                    // Save event to localStorage
+                    let events = JSON.parse(localStorage.getItem('events')) || [];
+                    events.push(event);
+                    localStorage.setItem('events', JSON.stringify(events));
+
+                    // Display event below the form
+                    displayEvent(event);
+
+                    alert('Event updated successfully!');
+                    updateForm.reset();
+                } else {
+                    alert('Please fill in all fields.');
+                }
+            });
+
+            // Function to fetch events from localStorage and display them
+            function fetchEvents() {
+                let events = JSON.parse(localStorage.getItem('events')) || [];
+
+                events.forEach(event => {
+                    displayEvent(event);
+                });
+            }
+
+            fetchEvents(); // Fetch and display events on page load
+        });
+    </script>
+</body>
+</html>

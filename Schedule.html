@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            background: #121212; /* Dark background */
+            color: white; /* White text for contrast */
+            font-family: Arial, sans-serif;
+        }
+
+        .content {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center; /* Center the content */
+        }
+
+        .schedule {
+            padding: 20px 0;
+        }
+
+        .schedule h2 {
+            margin-bottom: 20px;
+            color: #04AA6D;
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0 10px; /* Space between rows */
+            width: 80%;
+            background-color: white; /* White background for the table */
+            color: black; /* Black text for readability */
+            border-radius: 10px; /* Rounded corners for the table */
+        }
+
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+            border: 2px solid #04AA6D;
+        }
+
+        th {
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        tr:nth-child(even) td {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        tr:nth-child(odd) td {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Colorful bubble background effect */
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in-out;
+        }
+
+        .bubble:nth-child(1) {
+            background-color: rgba(255, 0, 0, 0.3);
+            width: 40px;
+            height: 40px;
+        }
+
+        .bubble:nth-child(2) {
+            background-color: rgba(0, 255, 0, 0.3);
+            width: 60px;
+            height: 60px;
+        }
+
+        .bubble:nth-child(3) {
+            background-color: rgba(0, 0, 255, 0.3);
+            width: 50px;
+            height: 50px;
+        }
+
+        .bubble:nth-child(4) {
+            background-color: rgba(255, 255, 0, 0.3);
+            width: 70px;
+            height: 70px;
+        }
+
+        .bubble:nth-child(5) {
+            background-color: rgba(255, 0, 255, 0.3);
+            width: 30px;
+            height: 30px;
+        }
+
+        .bubble:nth-child(6) {
+            background-color: rgba(0, 255, 255, 0.3);
+            width: 80px;
+            height: 80px;
+        }
+
+        .bubble:nth-child(7) {
+            background-color: rgba(255, 165, 0, 0.3);
+            width: 45px;
+            height: 45px;
+        }
+
+        .bubble:nth-child(8) {
+            background-color: rgba(128, 0, 128, 0.3);
+            width: 55px;
+            height: 55px;
+        }
+
+        .bubble:nth-child(9) {
+            background-color: rgba(0, 128, 0, 0.3);
+            width: 65px;
+            height: 65px;
+        }
+
+        .bubble:nth-child(10) {
+            background-color: rgba(128, 128, 0, 0.3);
+            width: 75px;
+            height: 75px;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -50px;
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(100px);
+            }
+            100% {
+                bottom: 100%;
+                transform: translateX(-100px);
+            }
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #04AA6D;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #028a50;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-link {
+            color: #04AA6D;
+            border-color: #04AA6D;
+            background-color: transparent;
+        }
+
+        .page-link:hover {
+            color: #028a50;
+            background-color: transparent;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: white;
+            background-color: #04AA6D;
+            border-color: #04AA6D;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <!-- Back Button -->
+        <a href="javascript:history.back()" class="back-button">Back</a>
+
+        <!-- Schedule Section -->
+        <div class="schedule">
+            <h2>Schedule</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-table-body">
+                    <!-- Schedule data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination" id="pagination">
+                <!-- Pagination links will be inserted here -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Colorful bubble background -->
+    <div class="bubble" style="left: 10%; animation-duration: 12s;"></div>
+    <div class="bubble" style="left: 20%; animation-duration: 8s;"></div>
+    <div class="bubble" style="left: 30%; animation-duration: 10s;"></div>
+    <div class="bubble" style="left: 40%; animation-duration: 14s;"></div>
+    <div class="bubble" style="left: 50%; animation-duration: 9s;"></div>
+    <div class="bubble" style="left: 60%; animation-duration: 11s;"></div>
+    <div class="bubble" style="left: 70%; animation-duration: 13s;"></div>
+    <div class="bubble" style="left: 80%; animation-duration: 10s;"></div>
+    <div class="bubble" style="left: 90%; animation-duration: 12s;"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Classroom</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Schedule</a></li>
+                        <li><a href="#">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>External Links</h5>
+                    <ul>
+                        <li><a href="#">Google</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Wikipedia</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scheduleTableBody = document.getElementById('schedule-table-body');
+            const eventsPerPage = 10; // Number of events per page
+            let currentPage = 1; // Current page, initialized to 1
+            let eventsData = []; // Array to hold all events
+    
+            // Dummy data for demonstration
+            const dummyData = [
+                { name: 'Event 1', date: '2024-06-19', time: '10:00 AM', details: 'Details for Event 1' },
+                { name: 'Event 2', date: '2024-06-20', time: '11:00 AM', details: 'Details for Event 2' },
+                { name: 'Event 3', date: '2024-06-21', time: '12:00 PM', details: 'Details for Event 3' },
+                { name: 'Event 4', date: '2024-06-22', time: '01:00 PM', details: 'Details for Event 4' },
+                { name: 'Event 5', date: '2024-06-23', time: '02:00 PM', details: 'Details for Event 5' },
+                { name: 'Event 6', date: '2024-06-24', time: '03:00 PM', details: 'Details for Event 6' },
+                { name: 'Event 7', date: '2024-06-25', time: '04:00 PM', details: 'Details for Event 7' },
+                { name: 'Event 8', date: '2024-06-26', time: '05:00 PM', details: 'Details for Event 8' },
+                { name: 'Event 9', date: '2024-06-27', time: '06:00 PM', details: 'Details for Event 9' },
+                { name: 'Event 10', date: '2024-06-28', time: '07:00 PM', details: 'Details for Event 10' },
+                { name: 'Event 11', date: '2024-06-29', time: '08:00 PM', details: 'Details for Event 11' },
+                { name: 'Event 12', date: '2024-06-30', time: '09:00 PM', details: 'Details for Event 12' },
+                { name: 'Event 13', date: '2024-07-01', time: '10:00 AM', details: 'Details for Event 13' }
+                // Add more dummy data as needed
+            ];
+    
+            // Function to display events based on current page
+            function displayEvents(page) {
+                currentPage = page;
+                const startIndex = (currentPage - 1) * eventsPerPage;
+                const endIndex = startIndex + eventsPerPage;
+                const paginatedEvents = eventsData.slice(startIndex, endIndex);
+    
+                if (paginatedEvents.length > 0) {
+                    const rowsHtml = paginatedEvents.map(event => `
+                        <tr>
+                            <td>${event.name}</td>
+                            <td>${event.date}</td>
+                            <td>${event.time}</td>
+                            <td>${event.details}</td>
+                        </tr>
+                    `).join('');
+                    scheduleTableBody.innerHTML = rowsHtml;
+                } else {
+                    scheduleTableBody.innerHTML = '<tr><td colspan="4">No upcoming events.</td></tr>';
+                }
+            }
+    
+            // Pagination setup
+            function setupPagination() {
+                const totalPages = Math.ceil(eventsData.length / eventsPerPage);
+                const paginationElement = document.getElementById('pagination');
+                let paginationHtml = '';
+    
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHtml += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="displayEvents(${i})">${i}</a>
+                        </li>
+                    `;
+                }
+    
+                paginationElement.innerHTML = paginationHtml;
+            }
+    
+            // Initialize with dummy data
+            eventsData = dummyData;
+            displayEvents(currentPage);
+            setupPagination();
+        });
+    </script>
+    

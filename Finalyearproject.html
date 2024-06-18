@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Year Project Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h2 {
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: calc(100% - 1rem);
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 0.75rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .task-updates {
+            margin-top: 2rem;
+        }
+
+        .task-update {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #4CAF50;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress {
+            margin-top: 0.5rem;
+        }
+
+        .edit-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .edit-buttons button {
+            margin-left: 0.5rem;
+        }
+
+        .task-update img {
+            max-width: 100%;
+            margin-top: 1rem;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #e65c54;
+        }
+
+        #gantt_container {
+            width: 100%;
+            height: 400px;
+            margin-top: 2rem;
+            background: white;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css">
+    <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Final Year Project Site</h1>
+        <a class="back-button" href="index.html">Back</a>
+    </header>
+    <main>
+        <h2>Update Task Progress</h2>
+        <form id="task-update-form">
+            <label for="task-name">Task Name:</label>
+            <input type="text" id="task-name" name="task-name" required>
+            <label for="progress">Progress:</label>
+            <input type="number" id="progress" name="progress" min="0" max="100" required>
+            <label for="update">Update:</label>
+            <textarea id="update" name="update" required></textarea>
+            <label for="image-url">Image URL:</label>
+            <input type="text" id="image-url" name="image-url">
+            <button type="submit">Submit Update</button>
+        </form>
+        <div class="task-updates">
+            <h2>Task Updates</h2>
+            <div id="task-update-list"></div>
+        </div>
+        <h2>Gantt Chart</h2>
+        <form id="gantt-date-form">
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" name="start-date" required>
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" name="end-date" required>
+            <button type="submit">Update Gantt Chart</button>
+        </form>
+        <div id="gantt_container"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskUpdateForm = document.getElementById('task-update-form');
+            const taskUpdateList = document.getElementById('task-update-list');
+            const ganttDateForm = document.getElementById('gantt-date-form');
+            const ganttContainer = document.getElementById('gantt_container');
+
+            taskUpdateForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const taskName = document.getElementById('task-name').value;
+                const progress = document.getElementById('progress').value;
+                const update = document.getElementById('update').value;
+                const imageUrl = document.getElementById('image-url').value;
+
+                if (taskName && progress && update) {
+                    const updateDiv = document.createElement('div');
+                    updateDiv.classList.add('task-update');
+                    updateDiv.innerHTML = `
+                        <h3>${taskName}</h3>
+                        <p class="progress">Progress: ${progress}%</p>
+                        <p class="update">${update}</p>
+                        ${imageUrl ? `<img src="${imageUrl}" alt="Task Update Image">` : ''}
+                        <div class="edit-buttons">
+                            <button class="edit-button">Edit</button>
+                            <button class="save-button" style="display: none;">Save</button>
+                        `;
+                    taskUpdateList.appendChild(updateDiv);
+
+                    taskUpdateForm.reset();
+                }
+            });
+
+            taskUpdateList.addEventListener('click', function(event) {
+                const target = event.target;
+                if (target.classList.contains('edit-button')) {
+                    const taskUpdate = target.closest('.task-update');
+                    const progressElement = taskUpdate.querySelector('.progress');
+                    const updateElement = taskUpdate.querySelector('.update');
+                    const imageUrl = taskUpdate.querySelector('img');
+                    const saveButton = taskUpdate.querySelector('.save-button');
+                    
+                    progressElement.contentEditable = true;
+                    updateElement.contentEditable = true;
+
+                    if (imageUrl) {
+                        imageUrl.removeAttribute('src');
+                        imageUrl.style.display = 'none';
+                    }
+
+                    target.style.display = 'none';
+                    saveButton.style.display = 'inline-block';
+                } else if (target.classList.contains('save-button')) {
+                    const taskUpdate = target.closest('.task-update');
+                    const progressElement = taskUpdate.querySelector('.progress');
+                    const updateElement = taskUpdate.querySelector('.update');
+                    const imageUrl = taskUpdate.querySelector('img');
+                    const editButton = taskUpdate.querySelector('.edit-button');
+
+                    progressElement.contentEditable = false;
+                    updateElement.contentEditable = false;
+
+                    if (imageUrl) {
+                        const imageUrlInput = taskUpdateForm.querySelector('#image-url');
+                        imageUrlInput.value = imageUrl.src;
+                        imageUrl.src = imageUrlInput.value;
+                        imageUrl.style.display = 'block';
+                    }
+
+                    editButton.style.display = 'inline-block';
+                    target.style.display = 'none';
+                }
+            });
+
+            ganttDateForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+
+                if (startDate && endDate) {
+                    gantt.clearAll();
+                    gantt.config.start_date = new Date(startDate);
+                    gantt.config.end_date = new Date(endDate);
+                    gantt.init("gantt_container");
+                    gantt.parse({
+                        data: [
+                            {id: 1, text: "Task 1", start_date: startDate, duration: 5},
+                            {id: 2, text: "Task 2", start_date: new Date(new Date(startDate).getTime() + (5 * 24 * 60 * 60 * 1000)), duration: 5},
+                            {id: 3, text: "Task 3", start_date: new Date(new Date(startDate).getTime() + (10 * 24 * 60 * 60 * 1000)), duration: 6}
+                        ],
+                        links: [
+                            {id: 1, source: 1, target: 2, type: "0"},
+                            {id: 2, source: 2, target: 3, type: "0"}
+                        ]
+                    });
+                }
+            });
+
+            // Initialize dhtmlxGantt
+            gantt.init("gantt_container");
+
+            // Define your tasks data
+            var tasks = {
+                data: [
+                    {id: 1, text: "Task 1", start_date: "2024-06-01", duration: 5},
+                    {id: 2, text: "Task 2", start_date: "2024-06-06", duration: 5},
+                    {id: 3, text: "Task 3", start_date: "2024-06-10", duration: 6}
+                ],
+                links: [
+                    {id: 1, source: 1, target: 2, type: "0"},
+                    {id: 2, source: 2, target: 3, type: "0"}
+                ]
+            };
+
+            // Load tasks data into the Gantt chart
+            gantt.parse(tasks);
+        });
+    </script>
+</body>
+</html>
